@@ -1,19 +1,28 @@
+// Функция для декодирования Base64 с поддержкой UTF-8
+function base64ToUtf8(str) {
+    return decodeURIComponent(escape(atob(str)));
+}
+
 const urlParams = new URLSearchParams(window.location.search);
 const encodedData = urlParams.get('data');
 
 if (encodedData) {
     try {
-        console.log("Base64 строка:", encodedData);
-        
-        // Декодирование Base64
-        const jsonString = atob(encodedData);
-        console.log("Декодированная строка JSON:", jsonString);
-        
+        console.log("Закодированные данные:", encodedData);
+
+        // Раскодируем URL-символы
+        const decodedData = decodeURIComponent(encodedData);
+        console.log("Декодированные данные Base64:", decodedData);
+
+        // Декодируем Base64 с поддержкой UTF-8
+        const jsonString = base64ToUtf8(decodedData);
+        console.log("JSON строка:", jsonString);
+
         // Парсинг JSON
         const tourData = JSON.parse(jsonString);
         console.log("Данные тура:", tourData);
 
-        // Отображение данных на странице
+        // Отображение данных
         document.getElementById('tour-title').textContent = tourData.title;
         document.getElementById('tour-duration').querySelector('p').textContent = tourData.duration;
         document.getElementById('tour-activities').querySelector('p').textContent = tourData.activities.join(', ');
