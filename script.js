@@ -46,7 +46,11 @@ if (encodedData) {
         contactWebsite.textContent = tourData.contacts.website || "Сайт не указан";
         contactWebsite.href = tourData.contacts.website || "#";
 
-        document.getElementById('cta-link').textContent = tourData.cta || "Свяжитесь с нами";
+        // Настройка ссылки для кнопки CTA (WhatsApp)
+        const ctaLink = document.getElementById('cta-link');
+        const message = encodeURIComponent(`Здравствуйте! Меня интересует тур: ${tourData.title || "Название тура"}`);
+        ctaLink.href = `https://wa.me/13474798289?text=${message}`;
+        ctaLink.textContent = tourData.cta || "Свяжитесь с нами";
 
     } catch (error) {
         console.error("Ошибка обработки данных:", error);
