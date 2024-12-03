@@ -1,18 +1,24 @@
 // Получение параметров из URL
 const urlParams = new URLSearchParams(window.location.search);
+const encodedData = urlParams.get('data');
 
-// Чтение параметров
-const title = urlParams.get('title');
-const duration = urlParams.get('duration');
-const activities = urlParams.get('activities');
-const includes = urlParams.get('includes');
-const notIncludes = urlParams.get('not_includes');
-const details = urlParams.get('details');
+if (encodedData) {
+    try {
+        // Декодирование Base64
+        const jsonString = atob(encodedData);
+        const tourData = JSON.parse(jsonString);
 
-// Динамическое отображение данных
-if (title) document.getElementById('tour-title').textContent = title;
-if (duration) document.getElementById('tour-duration').querySelector('p').textContent = duration;
-if (activities) document.getElementById('tour-activities').querySelector('p').textContent = activities.replace(/,/g, ', ');
-if (includes) document.getElementById('tour-includes').querySelector('p').textContent = includes.replace(/,/g, ', ');
-if (notIncludes) document.getElementById('tour-not-includes').querySelector('p').textContent = notIncludes.replace(/,/g, ', ');
-if (details) document.getElementById('tour-details').querySelector('p').textContent = details;
+        // Отображение данных на странице
+        document.getElementById('tour-title').textContent = tourData.title;
+        document.getElementById('tour-duration').querySelector('p').textContent = tourData.duration;
+        document.getElementById('tour-activities').querySelector('p').textContent = tourData.activities.join(', ');
+        document.getElementById('tour-includes').querySelector('p').textContent = tourData.includes.join(', ');
+        document.getElementById('tour-not-includes').querySelector('p').textContent = tourData.not_includes.join(', ');
+        document.getElementById('tour-details').querySelector('p').textContent = tourData.details;
+    } catch (error) {
+        console.error("Ошибка декодирования данных:", error);
+        document.body.innerHTML = "<h1>Ошибка загрузки данных</h1>";
+    }
+} else {
+    document.body.innerHTML = "<h1>Данные тура не найдены</h1>";
+}
